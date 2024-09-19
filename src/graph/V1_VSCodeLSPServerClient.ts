@@ -26,6 +26,7 @@ import {
   type V1_ArtifactGenerationExtensionOutput,
   type V1_CheckEntitlementsResult,
   type V1_CompileResult,
+  type V1_DatabaseBuilderInput,
   type V1_DatabaseToModelGenerationInput,
   type V1_DebugTestsResult,
   type V1_DeploymentResult,
@@ -74,6 +75,8 @@ import {
 import { type V1_EngineServerClient } from '@finos/legend-graph';
 
 export class V1_VSCodeLSPServerClient implements V1_EngineServerClient {
+  enableCompression = false;
+
   // ------------------------------------------- Helper -------------------------------------------
   setEnv = (value: string | undefined): void => {
     throw new Error('setEnv not yet implemented');

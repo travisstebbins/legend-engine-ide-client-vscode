@@ -14,7 +14,7 @@ export const buildGraphManagerStateFromEntities = async (
     LegendVSCodeApplicationConfig,
     LegendVSCodePluginManager
   >,
-): GraphManagerState => {
+): Promise<GraphManagerState> => {
   const serverClient = new V1_VSCodeLSPServerClient();
   const graphManager = buildPureGraphManager(
     applicationStore.pluginManager,

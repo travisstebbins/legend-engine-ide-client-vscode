@@ -20,6 +20,8 @@ import {
   type QueryBuilderState,
   CubesLoadingIndicator,
   CubesLoadingIndicatorIcon,
+  guaranteeType,
+  PureExecution,
   QueryBuilder,
   QueryBuilderActionConfig,
   ServiceQueryBuilderState,
@@ -89,6 +91,7 @@ export const ServiceQueryEditor: React.FC<{
             applicationStore,
           );
           const service = graphManagerState.graph.getService(serviceId);
+          const rawLambda = guaranteeType(service.execution, PureExecution).func;
           const newQueryBuilderState = new ServiceQueryBuilderState(
             applicationStore,
             graphManagerState,
@@ -104,7 +107,7 @@ export const ServiceQueryEditor: React.FC<{
               service: service.path,
             },
           );
-          newQueryBuilderState.initializeWithQuery(service.execution.func);
+          newQueryBuilderState.initializeWithQuery(rawLambda);
           await flowResult(
             newQueryBuilderState.explorerState.analyzeMappingModelCoverage(),
           ).catch(applicationStore.alertUnhandledError);
