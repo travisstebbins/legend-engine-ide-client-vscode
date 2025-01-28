@@ -27,7 +27,7 @@ import {
 } from './LegendLanguageClient';
 import { TextDocumentIdentifier } from 'vscode-languageclient';
 import { type LegendEntity } from './model/LegendEntity';
-import { CLASSIFIER_PATH } from '@finos/legend-engine-ide-client-vscode-shared';
+import { CLASSIFIER_PATH, TextLocation } from '@finos/legend-engine-ide-client-vscode-shared';
 
 export class LegendCodelensProvider implements CodeLensProvider {
   private client: LegendLanguageClient;
@@ -55,6 +55,24 @@ export class LegendCodelensProvider implements CodeLensProvider {
     );
   }
 
+  private addDatabaseCodeLens(entityLocation: TextLocation): void {
+    this.codeLenses.push(
+      new CodeLens(
+        new Range(
+          entityLocation.textInterval.start.line,
+          entityLocation.textInterval.start.column,
+          entityLocation.textInterval.end.line,
+          entityLocation.textInterval.end.column,
+        ),
+        {
+          title: 'Edit/Execute in QueryBuilder',
+          command: LEGEND_GENERATE_MODELS,
+          arguments: [entityLocation],
+        },
+      ),
+    );
+  }
+
   public async provideCodeLenses(
     document: TextDocument,
     _token: CancellationToken,
@@ -73,6 +91,9 @@ export class LegendCodelensProvider implements CodeLensProvider {
         entity.classifierPath === CLASSIFIER_PATH.FUNCTION
       ) {
         this.addQueryBuilderCodeLens(entity);
+      }
+      if (entity.classifierPath === CLASSIFIER_PATH.RELATION) {
+        this.addDatabaseCodeLens(entity.location);
       }
     });
     return this.codeLenses;

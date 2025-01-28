@@ -77,6 +77,7 @@ import {
   SERVICE_QUERY_EDITOR,
   SHOW_RESULTS_COMMAND_ID,
   TDSLegendExecutionResult,
+  TextLocation,
 } from '@finos/legend-engine-ide-client-vscode-shared';
 import { LegendWebViewProvider } from './utils/LegendWebViewProvider';
 import {
@@ -500,6 +501,15 @@ export function registerCommands(context: ExtensionContext): void {
     },
   );
   context.subscriptions.push(editInQueryBuilder);
+
+  const generateModels = commands.registerCommand(
+    LEGEND_GENERATE_MODELS, // TODO: add as const
+    async (...args: unknown[]) => {
+      const path = args[0] as TextLocation;
+      await client.generateModels(path);
+    }
+
+  )
 
   const oneEntityPerFileRefactor = commands.registerCommand(
     ONE_ENTITY_PER_FILE_COMMAND_ID,

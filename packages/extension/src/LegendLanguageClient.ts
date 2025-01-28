@@ -548,4 +548,24 @@ export class LegendLanguageClient extends LanguageClient {
           executableArgs,
         );
   }
+
+  async generateModels(
+    entityDetails:
+      | TextLocation
+      | { documentUri: string; sectionIndex: number; entityId: string },
+  ): Promise<LegendExecutionResult[]> {
+    return entityDetails instanceof TextLocation
+      ? commands.executeCommand(
+          LEGEND_COMMAND,
+          entityDetails,
+          GET_QUERY_TYPEAHEAD_COMMAND_ID,
+        )
+      : commands.executeCommand(
+          LEGEND_COMMAND,
+          entityDetails.documentUri,
+          entityDetails.sectionIndex,
+          entityDetails.entityId,
+          GET_QUERY_TYPEAHEAD_COMMAND_ID,
+        );
+  }
 }
